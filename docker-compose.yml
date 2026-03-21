@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+
+  api:
+    image: erickgc/comercial-api:latest
+    container_name: comercial-api
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DATABASE_URL: "sqlserver://host.docker.internal:1433;database=LibreriaDB;user=sa;password=KrezoiV@1984;trustServerCertificate=true"
+
+    restart: always

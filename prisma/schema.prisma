@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model persons {
+  id           String      @id(map: "PK__persons__3213E83F2E6743A9") @default(dbgenerated("newid()"), map: "DF__persons__id__49C3F6B7") @db.UniqueIdentifier
+  first_name   String      @db.NVarChar(50)
+  last_name    String      @db.NVarChar(50)
+  phone_number String      @db.NVarChar(8)
+  email        String      @db.NVarChar(75)
+  created_at   DateTime    @default(now(), map: "DF__persons__created__4AB81AF0")
+  updated_at   DateTime    @default(now(), map: "DF__persons__updated__4BAC3F29")
+  deleted_at   DateTime?
+  costumers    costumers[]
+  users        users[]
+
+  @@map("persons")
+}
+
+model categories {
+  id          String     @id(map: "PK__categori__3213E83FEC177E98") @default(dbgenerated("newid()"), map: "DF__categories__id__5FB337D6") @db.UniqueIdentifier
+  name        String     @db.NVarChar(50)
+  description String?    @db.NVarChar(255)
+  created_at  DateTime   @default(now(), map: "DF__categorie__creat__60A75C0F")
+  updated_at  DateTime   @default(now(), map: "DF__categorie__updat__619B8048")
+  deleted_at  DateTime?
+  products    products[]
+}
+
+model costumers {
+  id         String    @id(map: "PK__costumer__3213E83FA35C6BF6") @default(dbgenerated("newid()"), map: "DF__costumers__id__59FA5E80") @db.UniqueIdentifier
+  person_id  String    @db.UniqueIdentifier
+  created_at DateTime  @default(now(), map: "DF__costumers__creat__5AEE82B9")
+  updated_at DateTime  @default(now(), map: "DF__costumers__updat__5BE2A6F2")
+  deleted_at DateTime?
+  persons    persons   @relation(fields: [person_id], references: [id], onUpdate: NoAction, map: "FK__costumers__perso__5CD6CB2B")
+}
+
+model products {
+  id             String     @id(map: "PK__products__3213E83F4BB1566F") @default(dbgenerated("newid()"), map: "DF__products__id__6477ECF3") @db.UniqueIdentifier
+  category_id    String     @db.UniqueIdentifier
+  name           String     @db.NVarChar(50)
+  description    String?    @db.NVarChar(255)
+  sales_price    Decimal    @db.Decimal(18, 2)
+  purchase_price Decimal    @db.Decimal(18, 2)
+  created_at     DateTime   @default(now(), map: "DF__products__create__656C112C")
+  updated_at     DateTime   @default(now(), map: "DF__products__update__66603565")
+  deleted_at     DateTime?
+  categories     categories @relation(fields: [category_id], references: [id], onUpdate: NoAction, map: "FK__products__catego__6754599E")
+}
+
+model rols {
+  id          String    @id(map: "PK__rols__3213E83F75C532B6") @default(dbgenerated("newid()"), map: "DF__rols__id__4E88ABD4") @db.UniqueIdentifier
+  name        String    @db.NVarChar(50)
+  description String?   @db.NVarChar(255)
+  created_at  DateTime  @default(now(), map: "DF__rols__created_at__4F7CD00D")
+  updated_at  DateTime  @default(now(), map: "DF__rols__updated_at__5070F446")
+  deleted_at  DateTime?
+  users       users[]
+}
+
+model users {
+  id            String    @id(map: "PK__users__3213E83F461B4926") @default(dbgenerated("newid()"), map: "DF__users__id__534D60F1") @db.UniqueIdentifier
+  person_id     String    @db.UniqueIdentifier
+  username      String    @db.NVarChar(50)
+  rol_id        String    @db.UniqueIdentifier
+  password_hash String    @db.NVarChar(255)
+  created_at    DateTime  @default(now(), map: "DF__users__created_a__5441852A")
+  updated_at    DateTime  @default(now(), map: "DF__users__updated_a__5535A963")
+  deleted_at    DateTime?
+  persons       persons   @relation(fields: [person_id], references: [id], onUpdate: NoAction, map: "FK__users__person_id__5629CD9C")
+  rols          rols      @relation(fields: [rol_id], references: [id], onUpdate: NoAction, map: "FK__users__rol_id__571DF1D5")
+}
