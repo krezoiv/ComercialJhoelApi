@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import {
   IsEmail,
   IsOptional,
@@ -21,7 +19,9 @@ export class UpdatePersonDto {
 
   @IsOptional()
   @IsString()
-  @Matches(/^\d{8}$/)
+  @Matches(/^\d{8}$/, {
+    message: 'Invalid phone number format',
+  })
   phoneNumber?: string;
 
   @IsOptional()

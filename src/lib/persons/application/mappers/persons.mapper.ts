@@ -1,22 +1,25 @@
 import { randomUUID } from 'crypto';
-
 import { Persons } from '../../domain/entity/persons.entity';
-import { CreatePersonDto } from '../dtos/create-persons.dto';
-
 import { PersonId } from '../../domain/value-objects/personId';
 import { FirstName } from '../../domain/value-objects/firstName';
 import { LastName } from '../../domain/value-objects/lastName';
 import { PhoneNumber } from '../../domain/value-objects/phoneNumber';
 import { Email } from '../../domain/value-objects/email';
 
+type CreatePersonInput = {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+};
 export class PersonsMapper {
-  static toEntity(dto: CreatePersonDto): Persons {
+  static toEntity(input: CreatePersonInput): Persons {
     const id = new PersonId(randomUUID());
 
-    const firstName = new FirstName(dto.firstName);
-    const lastName = new LastName(dto.lastName);
-    const phoneNumber = new PhoneNumber(dto.phoneNumber);
-    const email = new Email(dto.email);
+    const firstName = new FirstName(input.firstName);
+    const lastName = new LastName(input.lastName);
+    const phoneNumber = new PhoneNumber(input.phoneNumber);
+    const email = new Email(input.email);
 
     const now = new Date();
 
@@ -32,6 +35,7 @@ export class PersonsMapper {
     );
   }
 
+  // 🔥 ESTE ESTÁ PERFECTO
   static toResponseDto(person: Persons) {
     return {
       id: person.id.value,

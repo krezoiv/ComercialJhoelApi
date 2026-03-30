@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import {
   IsEmail,
   IsNotEmpty,
@@ -8,21 +6,23 @@ import {
   Matches,
 } from 'class-validator';
 
-export class CreatePersonDto {
+export class CreatePersonsDto {
   @IsString()
-  @IsNotEmpty()
-  @Length(2, 50)
+  @IsNotEmpty({ message: 'Primer nombre es requerido' })
+  @Length(2, 50, { message: 'Primer Nombre debe ser entre 2 y 50 caracteres' })
   firstName!: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Apellido es requerido' })
   @Length(2, 50)
   lastName!: string;
 
   @IsString()
-  @Matches(/^\d{8}$/)
+  @Matches(/^\d{8}$/, {
+    message: 'Invalid phone number format',
+  })
   phoneNumber!: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'Forma de correo inválido' })
   email!: string;
 }

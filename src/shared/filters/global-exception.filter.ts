@@ -5,10 +5,12 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { BadRequestException } from '@nestjs/common';
 
 import { ValidationError } from '../errors/validation-error';
 import { NotFoundError } from '../errors/not-found-error';
 import { DomainError } from '../errors/domain-error';
+import { ConflictError } from '../errors/conflict-error';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -16,9 +18,29 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
+    if (exception instanceof BadRequestException) {
+      const responseBody = exception.getResponse() as unknown as {
+        message: string | string[];
+      };
+
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+
+        message: Array.isArray(responseBody.message)
+          ? responseBody.message[0]
+          : responseBody.message,
+      });
+    }
     if (exception instanceof ValidationError) {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
+        message: exception.message,
+      });
+    }
+
+    if (exception instanceof ConflictError) {
+      return response.status(HttpStatus.CONFLICT).json({
+        statusCode: 409,
         message: exception.message,
       });
     }

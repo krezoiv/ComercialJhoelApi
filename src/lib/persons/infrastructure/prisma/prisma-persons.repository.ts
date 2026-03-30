@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../shared/database/prisma.service';
 
@@ -9,96 +10,238 @@ import { FirstName } from '../../domain/value-objects/firstName';
 import { LastName } from '../../domain/value-objects/lastName';
 import { PhoneNumber } from '../../domain/value-objects/phoneNumber';
 import { Email } from '../../domain/value-objects/email';
+import { GetAllPersonSp } from '../stored-procedures/get-all-person.sp';
+import { CreatePersonSp } from '../stored-procedures/create-person.sp';
+import { DomainError } from 'src/shared/errors/domain-error';
+import { ValidationError } from 'src/shared/errors/validation-error';
+import { ConflictError } from 'src/shared/errors/conflict-error';
+import { UpdatePersonSp } from '../stored-procedures/update-person.sp';
+import { NotFoundError } from 'src/shared/errors/not-found-error';
+import { GetPersonByIdSp } from '../stored-procedures/get-person-by-id.sp';
+import { DeletePesonSp } from '../stored-procedures/delete -person.sp';
 
 @Injectable()
 export class PrismaPersonsRepository implements PersonsRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly _prisma: PrismaService,
+    private readonly _getAllPersonSp: GetAllPersonSp,
+    private readonly _createPersonSp: CreatePersonSp,
+    private readonly _updatePersonSp: UpdatePersonSp,
+    private readonly _getPersonByIdSp: GetPersonByIdSp,
+    private readonly _deletePersonSp: DeletePesonSp,
+  ) {}
 
   async create(person: Persons): Promise<Persons> {
-    await this.prisma.persons.create({
-      data: {
-        id: person.id.value,
-        first_name: person.firstName.value,
-        last_name: person.lastName.value,
-        phone_number: person.phoneNumber.value,
+    try {
+      const result = await this._createPersonSp.execute({
+        firstName: person.firstName.value,
+        lastName: person.lastName.value,
+        phoneNumber: person.phoneNumber.value,
         email: person.email.value,
-        created_at: person.createdAt,
-        updated_at: person.updatedAt,
-        deleted_at: person.deletedAt,
-      },
-    });
+        //id: '',
+      });
 
-    return person;
+      const created = result[0];
+
+      if (!created) {
+        throw new DomainError('No response from database');
+      }
+
+      // 🔥 MAPEO DE ERRORES DESDE SP
+      if (created.code !== 200) {
+        switch (created.code) {
+          case 400:
+            throw new ValidationError(created.message);
+
+          case 409:
+            throw new ConflictError(created.message);
+
+          default:
+            throw new DomainError(created.message);
+        }
+      }
+      console.log('SP RESULT:', created);
+      return new Persons(
+        new PersonId(created.id),
+        new FirstName(created.firstName),
+        new LastName(created.lastName),
+        new PhoneNumber(created.phoneNumber),
+        new Email(created.email),
+        new Date(created.createdAt),
+        new Date(created.updatedAt),
+        created.deletedAt ? new Date(created.deletedAt) : null,
+      );
+    } catch (error) {
+      console.error(error);
+
+      // 👇 si ya es error de dominio, lo re-lanzas
+      if (
+        error instanceof ConflictError ||
+        error instanceof ValidationError ||
+        error instanceof DomainError
+      ) {
+        throw error;
+      }
+
+      // 👇 error inesperado
+      throw new DomainError('Unexpected error creating person');
+    }
   }
-
   async findAll(): Promise<Persons[]> {
-    const persons = await this.prisma.persons.findMany({
-      where: {
-        deleted_at: null,
-      },
-    });
+    try {
+      const data = await this._getAllPersonSp.execute();
 
-    return persons.map(
-      (p) =>
-        new Persons(
-          new PersonId(p.id),
-          new FirstName(p.first_name),
-          new LastName(p.last_name),
-          new PhoneNumber(p.phone_number),
-          new Email(p.email),
-          p.created_at,
-          p.updated_at,
-          p.deleted_at,
-        ),
-    );
+      return data.map(
+        (item) =>
+          new Persons(
+            new PersonId(item.id),
+            new FirstName(item.firstName),
+            new LastName(item.lastName),
+            new PhoneNumber(item.phoneNumber),
+            new Email(item.email),
+            new Date(item.createdAt),
+            new Date(item.updatedAt),
+            item.deletedAt ? new Date(item.deletedAt) : null,
+          ),
+      );
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error fetching persons from SP');
+    }
   }
 
   async findById(id: PersonId): Promise<Persons | null> {
-    const person = await this.prisma.persons.findUnique({
-      where: {
+    try {
+      const result = await this._getPersonByIdSp.execute({
         id: id.value,
-      },
-    });
+      });
 
-    if (!person) return null;
+      const person = result[0];
 
-    return new Persons(
-      new PersonId(person.id),
-      new FirstName(person.first_name),
-      new LastName(person.last_name),
-      new PhoneNumber(person.phone_number),
-      new Email(person.email),
-      person.created_at,
-      person.updated_at,
-      person.deleted_at,
-    );
+      // 🔥 NOT FOUND → null (no exception)
+      if (!person || person.code === 404) {
+        return null;
+      }
+
+      // 🔥 otros errores
+      if (person.code !== 200) {
+        throw new DomainError(person.message);
+      }
+
+      // 🔥 validación crítica
+      if (!person.id) {
+        throw new DomainError('SP did not return valid person');
+      }
+
+      return new Persons(
+        new PersonId(person.id),
+        new FirstName(person.firstName),
+        new LastName(person.lastName),
+        new PhoneNumber(person.phoneNumber),
+        new Email(person.email),
+        new Date(person.createdAt),
+        new Date(person.updatedAt),
+        person.deletedAt ? new Date(person.deletedAt) : null,
+      );
+    } catch (error) {
+      console.error(error);
+
+      if (error instanceof DomainError) {
+        throw error;
+      }
+
+      throw new DomainError('Error fetching person');
+    }
   }
 
   async update(person: Persons): Promise<Persons> {
-    await this.prisma.persons.update({
-      where: {
+    try {
+      const result = await this._updatePersonSp.execute({
         id: person.id.value,
-      },
-      data: {
-        first_name: person.firstName.value,
-        last_name: person.lastName.value,
-        phone_number: person.phoneNumber.value,
+        firstName: person.firstName.value,
+        lastName: person.lastName.value,
+        phoneNumber: person.phoneNumber.value,
         email: person.email.value,
-        updated_at: person.updatedAt,
-      },
-    });
+      });
 
-    return person;
+      const updated = result[0];
+
+      if (!updated) {
+        throw new DomainError('No response from database');
+      }
+
+      // 🔥 MAPEO DE ERRORES
+      if (updated.code !== 200) {
+        switch (updated.code) {
+          case 400:
+            throw new ValidationError(updated.message);
+
+          case 404:
+            throw new NotFoundError('Person');
+
+          case 409:
+            throw new ConflictError(updated.message);
+
+          default:
+            throw new DomainError(updated.message);
+        }
+      }
+
+      // 🔥 MAPEO A ENTITY
+      return new Persons(
+        new PersonId(updated.id),
+        new FirstName(updated.firstName),
+        new LastName(updated.lastName),
+        new PhoneNumber(updated.phoneNumber),
+        new Email(updated.email),
+        new Date(updated.createdAt),
+        new Date(updated.updatedAt),
+        updated.deletedAt ? new Date(updated.deletedAt) : null,
+      );
+    } catch (error) {
+      console.error(error);
+
+      if (
+        error instanceof ConflictError ||
+        error instanceof ValidationError ||
+        error instanceof DomainError
+      ) {
+        throw error;
+      }
+
+      throw new DomainError('Error updating person');
+    }
   }
 
   async delete(id: PersonId): Promise<void> {
-    await this.prisma.persons.update({
-      where: {
+    try {
+      const result = await this._deletePersonSp.execute({
         id: id.value,
-      },
-      data: {
-        deleted_at: new Date(),
-      },
-    });
+        deletedAt: '',
+        updatedAt: '',
+      });
+
+      const deleted = result[0];
+
+      if (!deleted) {
+        throw new DomainError('No response from database');
+      }
+
+      if (deleted.code !== 200) {
+        switch (deleted.code) {
+          case 404:
+            throw new NotFoundError('Person');
+
+          default:
+            throw new DomainError(deleted.message || 'Error deleting person');
+        }
+      }
+    } catch (error) {
+      if (error instanceof NotFoundError || error instanceof DomainError) {
+        throw error;
+      }
+
+      throw new DomainError('Error deleting person');
+    }
   }
 }

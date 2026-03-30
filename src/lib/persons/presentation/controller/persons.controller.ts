@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
@@ -13,10 +14,13 @@ import { CreatePersonsCommand } from '../../application/commands/create-persons.
 import { UpdatePersonsCommand } from '../../application/commands/update-persons.command';
 import { SoftDeletePersonsCommand } from '../../application/commands/soft-delete-persons.command';
 
-import { CreatePersonDto } from '../../application/dtos/create-persons.dto';
+import { CreatePersonsDto } from '../../application/dtos/create-persons.dto';
 import { UpdatePersonDto } from '../../application/dtos/update-persons.dto';
 import { GetAllPersonsQuery } from '../../application/queries/get-all-persons.query';
 import { GetByIdPersonsQuery } from '../../application/queries/get-byId-persons.query';
+import { Persons } from '../../domain/entity/persons.entity';
+import { GetPersonByIdDto } from '../../application/dtos/get-byId-persons.dto';
+import { SoftDeletePersonsDto } from '../../application/dtos/soft-delete-persons.dto';
 
 @Controller('persons')
 export class PersonsController {
@@ -26,7 +30,7 @@ export class PersonsController {
   ) {}
 
   @Post()
-  create(@Body() dto: CreatePersonDto) {
+  async create(@Body() dto: CreatePersonsDto): Promise<Persons> {
     return this.commandBus.execute(
       new CreatePersonsCommand(
         dto.firstName,
@@ -38,17 +42,20 @@ export class PersonsController {
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Persons> {
     return this.queryBus.execute(new GetAllPersonsQuery());
   }
 
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.queryBus.execute(new GetByIdPersonsQuery(id));
+  async findById(@Param() dto: GetPersonByIdDto): Promise<Persons> {
+    return this.queryBus.execute(new GetByIdPersonsQuery(dto.id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdatePersonDto) {
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdatePersonDto,
+  ): Promise<Persons> {
     return this.commandBus.execute(
       new UpdatePersonsCommand(
         id,
@@ -61,7 +68,7 @@ export class PersonsController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.commandBus.execute(new SoftDeletePersonsCommand(id));
+  async delete(@Param() dto: SoftDeletePersonsDto): Promise<void> {
+    return this.commandBus.execute(new SoftDeletePersonsCommand(dto.id));
   }
 }
