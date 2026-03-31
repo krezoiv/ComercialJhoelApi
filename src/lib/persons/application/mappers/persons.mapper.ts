@@ -5,13 +5,14 @@ import { FirstName } from '../../domain/value-objects/firstName';
 import { LastName } from '../../domain/value-objects/lastName';
 import { PhoneNumber } from '../../domain/value-objects/phoneNumber';
 import { Email } from '../../domain/value-objects/email';
+import { CreatePersonInput } from '../../infrastructure/types/create-person.type';
 
-type CreatePersonInput = {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-};
+// type CreatePersonInput = {
+//   firstName: string;
+//   lastName: string;
+//   phoneNumber: string;
+//   email: string;
+// };
 export class PersonsMapper {
   static toEntity(input: CreatePersonInput): Persons {
     const id = new PersonId(randomUUID());

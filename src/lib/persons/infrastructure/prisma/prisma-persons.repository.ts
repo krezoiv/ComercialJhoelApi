@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../../shared/database/prisma.service';
-
 import { PersonsRepository } from '../../domain/repository/persons.repository';
 import { Persons } from '../../domain/entity/persons.entity';
-
 import { PersonId } from '../../domain/value-objects/personId';
 import { FirstName } from '../../domain/value-objects/firstName';
 import { LastName } from '../../domain/value-objects/lastName';
@@ -23,7 +20,6 @@ import { DeletePesonSp } from '../stored-procedures/delete -person.sp';
 @Injectable()
 export class PrismaPersonsRepository implements PersonsRepository {
   constructor(
-    private readonly _prisma: PrismaService,
     private readonly _getAllPersonSp: GetAllPersonSp,
     private readonly _createPersonSp: CreatePersonSp,
     private readonly _updatePersonSp: UpdatePersonSp,
@@ -60,7 +56,7 @@ export class PrismaPersonsRepository implements PersonsRepository {
             throw new DomainError(created.message);
         }
       }
-      console.log('SP RESULT:', created);
+
       return new Persons(
         new PersonId(created.id),
         new FirstName(created.firstName),

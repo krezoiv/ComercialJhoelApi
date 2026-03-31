@@ -1,5 +1,5 @@
-import { BaseAudit, BaseId } from './base.type';
-import { SpResponse } from './sp-response.type';
+import { BaseAudit, BaseId } from '../../../../shared/infrastructure/base.type';
+import { SpResponse } from '../../../../shared/infrastructure/sp-response.type';
 
 // INPUT (lo que mandas al SP)
 export interface UpdatePersonInput extends BaseId {

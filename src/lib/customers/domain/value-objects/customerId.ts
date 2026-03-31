@@ -1,3 +1,3 @@
 import { UuidValueObject } from 'src/shared/domain/uuid.vo';
 
-export class PersonId extends UuidValueObject {}
+export class CustomerId extends UuidValueObject {}

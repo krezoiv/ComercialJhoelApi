@@ -1,5 +1,8 @@
-import { BaseAudit, SpResponse } from './base.type';
-import { PersonBase } from './person.type';
+import {
+  BaseAudit,
+  SpResponse,
+} from '../../../../shared/infrastructure/base.type';
+import { PersonBase } from './person-base.type';
 
 export type CreatePersonInput = Omit<PersonBase, 'id'>;
 

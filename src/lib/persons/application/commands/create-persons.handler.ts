@@ -10,7 +10,7 @@ import { PERSONS_REPOSITORY } from '../../domain/repository/persons.repository.t
 export class CreatePersonsHandler implements ICommandHandler<CreatePersonsCommand> {
   constructor(
     @Inject(PERSONS_REPOSITORY)
-    private readonly personRepository: PersonsRepository,
+    private readonly _personRepository: PersonsRepository,
   ) {}
 
   async execute(command: CreatePersonsCommand) {
@@ -21,6 +21,6 @@ export class CreatePersonsHandler implements ICommandHandler<CreatePersonsComman
       email: command.email,
     });
 
-    return this.personRepository.create(person);
+    return this._personRepository.create(person);
   }
 }
