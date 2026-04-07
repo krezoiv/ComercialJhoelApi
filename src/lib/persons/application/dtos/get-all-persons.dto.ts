@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class GetAllPersonsDto {

@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { CustomersRepository } from '../../domain/respository/customers.repository';
-import { Customers } from '../../domain/entity/customers.entity';
-import { GetAllCustomersSp } from '../stored-procedures/get-all-customers.sp';
-import { CustomerId } from '../../domain/value-objects/customerId';
-import { PersonId } from 'src/lib/persons/domain/value-objects/personId';
-import { CreateCustomersSp } from '../stored-procedures/create-customers.sp';
-import { ValidationError } from 'src/shared/errors/validation-error';
-import { ConflictError } from 'src/shared/errors/conflict-error';
-import { DomainError } from 'src/shared/errors/domain-error';
+import {
+  CustomerId,
+  Customers,
+  CustomersRepository,
+} from '../../domain/index-domain';
+import {
+  CreateCustomersSp,
+  CustomerWithPerson,
+  GetAllCustomersSp,
+} from '../index-infrastructure';
+import {
+  ConflictError,
+  DomainError,
+  ValidationError,
+} from 'src/shared/errors/index-errors';
+import { PersonId } from 'src/lib/persons/domain/index-domain';
 
 @Injectable()
 export class PrismaCustomersRepository implements CustomersRepository {
@@ -80,12 +87,20 @@ export class PrismaCustomersRepository implements CustomersRepository {
       throw new Error('Error fetching persons from SP');
     }
   }
+
+  async findAllRaw(): Promise<CustomerWithPerson[]> {
+    return this._getAllCustomersSp.execute();
+  }
+
+  //TODO
   findById(): Promise<Customers | null> {
     throw new Error('Method not implemented.');
   }
+  //TODO
   update(): Promise<Customers> {
     throw new Error('Method not implemented.');
   }
+  //TODO
   delete(): Promise<void> {
     throw new Error('Method not implemented.');
   }

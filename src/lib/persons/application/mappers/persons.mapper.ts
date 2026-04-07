@@ -1,18 +1,21 @@
 import { randomUUID } from 'crypto';
-import { Persons } from '../../domain/entity/persons.entity';
-import { PersonId } from '../../domain/value-objects/personId';
-import { FirstName } from '../../domain/value-objects/firstName';
-import { LastName } from '../../domain/value-objects/lastName';
-import { PhoneNumber } from '../../domain/value-objects/phoneNumber';
-import { Email } from '../../domain/value-objects/email';
-import { CreatePersonInput } from '../../infrastructure/types/create-person.type';
+import { CreatePersonInput } from '../../infrastructure/index-infrastructure';
+import {
+  Email,
+  FirstName,
+  LastName,
+  PersonId,
+  Persons,
+  PhoneNumber,
+} from '../../domain/index-domain';
+// import { Persons } from '../../domain/entity/persons.entity';
+// import { PersonId } from '../../domain/value-objects/personId';
+// import { FirstName } from '../../domain/value-objects/firstName';
+// import { LastName } from '../../domain/value-objects/lastName';
+// import { PhoneNumber } from '../../domain/value-objects/phoneNumber';
+// import { Email } from '../../domain/value-objects/email';
+// import { CreatePersonInput } from '../../infrastructure/types/create-person.type';
 
-// type CreatePersonInput = {
-//   firstName: string;
-//   lastName: string;
-//   phoneNumber: string;
-//   email: string;
-// };
 export class PersonsMapper {
   static toEntity(input: CreatePersonInput): Persons {
     const id = new PersonId(randomUUID());
@@ -36,7 +39,6 @@ export class PersonsMapper {
     );
   }
 
-  // 🔥 ESTE ESTÁ PERFECTO
   static toResponseDto(person: Persons) {
     return {
       id: person.id.value,

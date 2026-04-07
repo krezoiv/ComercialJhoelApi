@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { SpExecutorService } from 'src/shared/database/sp-executor.service';
+import { SpExecutorService } from 'src/shared/database/index-database';
 import {
   CreateCustomersInput,
   CreateCustomersResult,
-} from '../types/create-customers.type';
+} from '../index-infrastructure';
 
 @Injectable()
 export class CreateCustomersSp {

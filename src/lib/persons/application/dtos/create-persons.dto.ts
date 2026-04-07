@@ -8,8 +8,8 @@ import {
 
 export class CreatePersonsDto {
   @IsString()
-  @IsNotEmpty({ message: 'Primer nombre es requerido' })
-  @Length(2, 50, { message: 'Primer Nombre debe ser entre 2 y 50 caracteres' })
+  @IsNotEmpty({ message: 'Nombre es requerido' })
+  @Length(2, 50)
   firstName!: string;
 
   @IsString()
@@ -19,7 +19,8 @@ export class CreatePersonsDto {
 
   @IsString()
   @Matches(/^\d{8}$/, {
-    message: 'Invalid phone number format',
+    message:
+      'Número de teléfono debe tener exactamente 8 dígitos o es invalido',
   })
   phoneNumber!: string;
 

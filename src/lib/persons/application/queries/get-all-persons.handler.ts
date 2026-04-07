@@ -1,9 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { GetAllPersonsQuery } from './get-all-persons.query';
-import { PersonsMapper } from '../mappers/persons.mapper';
-import { PersonsRepository } from '../../domain/repository/persons.repository';
-import { PERSONS_REPOSITORY } from '../../domain/repository/persons.repository.token';
+import { PersonsMapper } from '../index-application';
+import {
+  PERSONS_REPOSITORY,
+  PersonsRepository,
+} from '../../domain/index-domain';
 
 @QueryHandler(GetAllPersonsQuery)
 export class GetAllPersonsHandler implements IQueryHandler<GetAllPersonsQuery> {

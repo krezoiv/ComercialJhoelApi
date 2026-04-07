@@ -1,7 +1,6 @@
-import { BaseEntity } from 'src/shared/domain/base-entity';
-import { CustomerId } from '../value-objects/customerId';
-import { PersonId } from 'src/lib/persons/domain/value-objects/personId';
-import { Persons } from 'src/lib/persons/domain/entity/persons.entity';
+import { BaseEntity } from 'src/shared/domain/index-shared-domin';
+import { CustomerId } from '../index-domain';
+import { PersonId, Persons } from 'src/lib/persons/domain/index-domain';
 
 export class Customers extends BaseEntity<CustomerId> {
   public personId: PersonId;

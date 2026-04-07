@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { SpExecutorService } from 'src/shared/database/sp-executor.service';
-import {
-  UpdatePersonInput,
-  UpdatePersonResult,
-} from '../types/update-person.type';
+import { UpdatePersonInput, UpdatePersonResult } from '../index-infrastructure';
+import { SpExecutorService } from 'src/shared/database/index-database';
 
 @Injectable()
 export class UpdatePersonSp {

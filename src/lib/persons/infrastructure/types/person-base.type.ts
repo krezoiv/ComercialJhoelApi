@@ -1,4 +1,4 @@
-import { BaseId } from '../../../../shared/infrastructure/base.type';
+import { BaseId } from 'src/shared/infrastructure/base.type';
 
 export interface PersonBase extends BaseId {
   firstName: string;

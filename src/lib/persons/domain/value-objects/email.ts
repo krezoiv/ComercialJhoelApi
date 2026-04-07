@@ -1,5 +1,5 @@
-import { ValueObject } from '../../../../shared/domain/value-object';
-import { ValidationError } from '../../../../shared/errors/validation-error';
+import { ValueObject } from 'src/shared/domain/index-shared-domin';
+import { ValidationError } from 'src/shared/errors/index-errors';
 
 export class Email extends ValueObject<string> {
   constructor(value: string) {
@@ -14,11 +14,11 @@ export class Email extends ValueObject<string> {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(this.value)) {
-      throw new ValidationError('Invalid email format');
+      throw new ValidationError('Formatro de correo inválido');
     }
 
     if (this.value.length > 255) {
-      throw new ValidationError('Email too long');
+      throw new ValidationError('Correo no puede tener más de 255 caracteres');
     }
   }
 }

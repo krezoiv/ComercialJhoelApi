@@ -1,9 +1,11 @@
 import { BaseEntity } from 'src/shared/domain/base-entity';
-import { Email } from '../value-objects/email';
-import { FirstName } from '../value-objects/firstName';
-import { LastName } from '../value-objects/lastName';
-import { PersonId } from '../value-objects/personId';
-import { PhoneNumber } from '../value-objects/phoneNumber';
+import {
+  Email,
+  FirstName,
+  LastName,
+  PersonId,
+  PhoneNumber,
+} from '../index-domain';
 
 export class Persons extends BaseEntity<PersonId> {
   public firstName: FirstName;

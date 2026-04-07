@@ -1,5 +1,5 @@
-import { ValueObject } from '../../../../shared/domain/value-object';
-import { ValidationError } from '../../../../shared/errors/validation-error';
+import { ValueObject } from 'src/shared/domain/index-shared-domin';
+import { ValidationError } from 'src/shared/errors/index-errors';
 
 export class PhoneNumber extends ValueObject<string> {
   constructor(value: string) {
@@ -14,7 +14,7 @@ export class PhoneNumber extends ValueObject<string> {
     const phoneRegex = /^\d{8}$/;
 
     if (!phoneRegex.test(this.value)) {
-      throw new ValidationError('Invalid phone number format');
+      throw new ValidationError('Formato de número de teléfono inválido');
     }
   }
 }

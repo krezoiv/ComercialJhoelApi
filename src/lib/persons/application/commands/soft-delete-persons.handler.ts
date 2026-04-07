@@ -1,13 +1,20 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { NotFoundError } from 'src/shared/errors/not-found-error';
 import { Inject } from '@nestjs/common';
+import { SoftDeletePersonsCommand } from '../index-application';
+import {
+  PersonId,
+  PERSONS_REPOSITORY,
+  PersonsRepository,
+} from '../../domain/index-domain';
 
-import { SoftDeletePersonsCommand } from '../commands/soft-delete-persons.command';
+// import { SoftDeletePersonsCommand } from '../commands/soft-delete-persons.command';
 
-import { PERSONS_REPOSITORY } from '../../domain/repository/persons.repository.token';
-import { PersonsRepository } from '../../domain/repository/persons.repository';
+// import { PERSONS_REPOSITORY } from '../../domain/repository/persons.repository.token';
+// import { PersonsRepository } from '../../domain/repository/persons.repository';
 
-import { PersonId } from '../../domain/value-objects/personId';
+// import { PersonId } from '../../domain/value-objects/personId';
+
 @CommandHandler(SoftDeletePersonsCommand)
 export class SoftDeletePersonsHandler implements ICommandHandler<SoftDeletePersonsCommand> {
   constructor(

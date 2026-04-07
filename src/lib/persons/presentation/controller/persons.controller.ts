@@ -9,16 +9,18 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreatePersonsCommand } from '../../application/commands/create-persons.command';
-import { UpdatePersonsCommand } from '../../application/commands/update-persons.command';
-import { SoftDeletePersonsCommand } from '../../application/commands/soft-delete-persons.command';
-import { CreatePersonsDto } from '../../application/dtos/create-persons.dto';
-import { UpdatePersonDto } from '../../application/dtos/update-persons.dto';
-import { GetAllPersonsQuery } from '../../application/queries/get-all-persons.query';
-import { GetByIdPersonsQuery } from '../../application/queries/get-byId-persons.query';
-import { Persons } from '../../domain/entity/persons.entity';
-import { GetPersonByIdDto } from '../../application/dtos/get-byId-persons.dto';
-import { SoftDeletePersonsDto } from '../../application/dtos/soft-delete-persons.dto';
+import {
+  CreatePersonsCommand,
+  CreatePersonsDto,
+  GetAllPersonsQuery,
+  GetByIdPersonsQuery,
+  GetPersonByIdDto,
+  SoftDeletePersonsCommand,
+  SoftDeletePersonsDto,
+  UpdatePersonDto,
+  UpdatePersonsCommand,
+} from '../../application/index-application';
+import { Persons } from '../../domain/index-domain';
 
 @Controller('persons')
 export class PersonsController {

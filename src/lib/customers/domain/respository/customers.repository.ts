@@ -1,9 +1,10 @@
-import { BaseRepository } from 'src/shared/domain/base-repository';
-import { Customers } from '../entity/customers.entity';
-import { CustomerId } from '../value-objects/customerId';
+import { BaseRepository } from 'src/shared/domain/index-shared-domin';
+import { CustomerId, Customers } from '../index-domain';
+import { CustomerWithPerson } from '../../infrastructure/index-infrastructure';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface CustomersRepository extends BaseRepository<
   Customers,
   CustomerId
-> {}
+> {
+  findAllRaw(): Promise<CustomerWithPerson[]>;
+}

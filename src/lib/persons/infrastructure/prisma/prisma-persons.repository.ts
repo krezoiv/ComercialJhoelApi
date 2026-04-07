@@ -1,21 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
-import { PersonsRepository } from '../../domain/repository/persons.repository';
-import { Persons } from '../../domain/entity/persons.entity';
-import { PersonId } from '../../domain/value-objects/personId';
-import { FirstName } from '../../domain/value-objects/firstName';
-import { LastName } from '../../domain/value-objects/lastName';
-import { PhoneNumber } from '../../domain/value-objects/phoneNumber';
-import { Email } from '../../domain/value-objects/email';
-import { GetAllPersonSp } from '../stored-procedures/get-all-person.sp';
-import { CreatePersonSp } from '../stored-procedures/create-person.sp';
-import { DomainError } from 'src/shared/errors/domain-error';
-import { ValidationError } from 'src/shared/errors/validation-error';
-import { ConflictError } from 'src/shared/errors/conflict-error';
-import { UpdatePersonSp } from '../stored-procedures/update-person.sp';
-import { NotFoundError } from 'src/shared/errors/not-found-error';
-import { GetPersonByIdSp } from '../stored-procedures/get-person-by-id.sp';
-import { DeletePesonSp } from '../stored-procedures/delete -person.sp';
+import {
+  Email,
+  FirstName,
+  LastName,
+  PersonId,
+  Persons,
+  PersonsRepository,
+  PhoneNumber,
+} from '../../domain/index-domain';
+import {
+  CreatePersonSp,
+  DeletePesonSp,
+  GetAllPersonSp,
+  GetPersonByIdSp,
+  UpdatePersonSp,
+} from '../index-infrastructure';
+import {
+  ConflictError,
+  DomainError,
+  NotFoundError,
+  ValidationError,
+} from 'src/shared/errors/index-errors';
 
 @Injectable()
 export class PrismaPersonsRepository implements PersonsRepository {

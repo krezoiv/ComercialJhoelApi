@@ -1,0 +1,12 @@
+export * from './prisma/prisma-persons.repository';
+export * from './stored-procedures/create-person.sp';
+export * from './stored-procedures/delete -person.sp';
+export * from './stored-procedures/get-all-person.sp';
+export * from './stored-procedures/get-person-by-id.sp';
+export * from './stored-procedures/update-person.sp';
+export * from './types/create-person.type';
+export * from './types/delete-person.type';
+export * from './types/get-all-person.type';
+export * from './types/get-person-by-id.type';
+export * from './types/person-base.type';
+export * from './types/update-person.type';

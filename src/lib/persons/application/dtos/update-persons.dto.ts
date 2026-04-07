@@ -20,11 +20,12 @@ export class UpdatePersonDto {
   @IsOptional()
   @IsString()
   @Matches(/^\d{8}$/, {
-    message: 'Invalid phone number format',
+    message:
+      'Número de teléfono debe tener exactamente 8 dígitos o es invalido',
   })
   phoneNumber?: string;
 
   @IsOptional()
-  @IsEmail()
+  @IsEmail({}, { message: 'Forma de correo inválido' })
   email?: string;
 }

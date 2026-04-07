@@ -1,6 +1,6 @@
-import { SpExecutorService } from 'src/shared/database/sp-executor.service';
-import { GetAllCustomerResults } from '../types/get-all-customers.type';
 import { Injectable } from '@nestjs/common';
+import { SpExecutorService } from 'src/shared/database/index-database';
+import { GetAllCustomerResults } from '../index-infrastructure';
 
 @Injectable()
 export class GetAllCustomersSp {
@@ -9,7 +9,6 @@ export class GetAllCustomersSp {
   async execute(): Promise<GetAllCustomerResults[]> {
     return this.spExecutor.execute<GetAllCustomerResults>`
         EXEC sp_get_all_customers
-        
         `;
   }
 }

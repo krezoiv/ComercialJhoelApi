@@ -1,7 +1,6 @@
-import { Customers } from '../../domain/entity/customers.entity';
-import { CustomerId } from '../../domain/value-objects/customerId';
 import { randomUUID } from 'crypto';
-import { CreateCustomersInput } from '../../infrastructure/types/create-customers.type';
+import { CreateCustomersInput } from '../../infrastructure/index-infrastructure';
+import { CustomerId, Customers } from '../../domain/index-domain';
 
 export class CustomerMapper {
   static toEntity(input: CreateCustomersInput): Customers {

@@ -1,13 +1,14 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { NotFoundError } from 'src/shared/errors/not-found-error';
+//import { NotFoundError } from 'src/shared/errors/not-found-error';
 import { GetByIdPersonsQuery } from './get-byId-persons.query';
-
-import { PersonId } from '../../domain/value-objects/personId';
-
-import { PERSONS_REPOSITORY } from '../../domain/repository/persons.repository.token';
-import { PersonsRepository } from '../../domain/repository/persons.repository';
-import { PersonsMapper } from '../mappers/persons.mapper';
+import {
+  PersonId,
+  PERSONS_REPOSITORY,
+  PersonsRepository,
+} from '../../domain/index-domain';
+import { NotFoundError } from 'src/shared/errors/index-errors';
+import { PersonsMapper } from '../index-application';
 
 @QueryHandler(GetByIdPersonsQuery)
 export class GetPersonByIdHandler implements IQueryHandler<GetByIdPersonsQuery> {

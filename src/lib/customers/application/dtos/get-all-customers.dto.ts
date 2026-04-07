@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class GetAllCustomersDto {
@@ -7,7 +5,6 @@ export class GetAllCustomersDto {
   @IsInt()
   @Min(1)
   page?: number;
-
   @IsOptional()
   @IsInt()
   @Min(1)
@@ -15,14 +12,12 @@ export class GetAllCustomersDto {
 }
 
 export class CustomerResponseDto {
-  id: string;
-  personId: string;
-
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-
-  createdAt: Date;
-  updatedAt: Date;
+  id!: string;
+  personId!: string;
+  firstName!: string;
+  lastName!: string;
+  phoneNumber!: string;
+  email!: string;
+  createdAt!: Date;
+  updatedAt!: Date;
 }

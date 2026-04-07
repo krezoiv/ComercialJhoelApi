@@ -1,32 +1,34 @@
-import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CUSTOMERS_REPOSITORY } from './domain/respository/customers.repository.token';
-import { CustomerController } from './presentation/controllers/customers.controller';
-import { PrismaService } from 'src/shared/database/prisma.service';
-import { SpExecutorService } from 'src/shared/database/sp-executor.service';
-import { GetAllCustomersSp } from './infrastructure/stored-procedures/get-all-customers.sp';
-import { GetAllCustomersHandler } from './application/quieries/get-all-customers.handler';
+import {
+  CreateCustomersHandler,
+  GetAllCustomersHandler,
+} from './application/index-application';
+import {
+  PrismaService,
+  SpExecutorService,
+} from 'src/shared/database/index-database';
+import {
+  CreateCustomersSp,
+  GetAllCustomersSp,
+} from './infrastructure/index-infrastructure';
+import { CUSTOMERS_REPOSITORY } from './domain/index-domain';
 import { PrismaCustomersRepository } from './infrastructure/prisma/prisma-customers-repository';
-//import { CreateCustomersCommand } from './application/commands/create-customers.command';
-import { CreateCustomersSp } from './infrastructure/stored-procedures/create-customers.sp';
-import { CreateCustomersHandler } from './application/commands/create-customers.handler';
+import { Module } from '@nestjs/common';
+import { CustomerController } from './presentation/index-presentation';
 
 const CommandHandlers = [CreateCustomersHandler];
 const QueryHandlers = [GetAllCustomersHandler];
 
 @Module({
   imports: [CqrsModule],
-
   controllers: [CustomerController],
-
   providers: [
     PrismaService,
     SpExecutorService,
-    GetAllCustomersSp,
     CreateCustomersSp,
+    GetAllCustomersSp,
     ...CommandHandlers,
     ...QueryHandlers,
-
     {
       provide: CUSTOMERS_REPOSITORY,
       useClass: PrismaCustomersRepository,

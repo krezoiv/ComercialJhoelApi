@@ -1,0 +1,1 @@
+export const ROLS_REPOSITORY = 'ROLS_REPOSITORY';
