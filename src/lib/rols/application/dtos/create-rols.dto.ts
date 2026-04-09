@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class CreateRolsDto {
   @IsString()
   @IsNotEmpty({ message: 'Nombre es requerido' })
-  name!: string;
+  rolName!: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Descripción es requerida' })

@@ -1,11 +1,16 @@
 import { randomUUID } from 'crypto';
 import { CreateRolsInput } from '../../infrastructure/index-rols-infrastructure';
-import { Description, Name, RolId, Rols } from '../../domain/index-rols-domain';
+import {
+  Description,
+  RolId,
+  RolName,
+  Rols,
+} from '../../domain/index-rols-domain';
 
 export class RolsMapper {
   static toEntity(input: CreateRolsInput): Rols {
     const id = new RolId(randomUUID());
-    const name = new Name(input.name);
+    const name = new RolName(input.rolName);
     const description = new Description(input.description);
     const now = new Date();
 
@@ -15,7 +20,7 @@ export class RolsMapper {
   static toResponseDto(rol: Rols) {
     return {
       id: rol.id.value,
-      name: rol.name.value,
+      rolName: rol.rolName.value,
       description: rol.description.value,
       createdAt: rol.createdAt,
       updatedAt: rol.updatedAt,

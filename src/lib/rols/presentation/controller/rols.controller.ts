@@ -17,7 +17,7 @@ export class RolsController {
   @Post()
   async create(@Body() dto: CreateRolsDto): Promise<Rols> {
     return this._commandBus.execute(
-      new CreateRolsCommand(dto.name, dto.description),
+      new CreateRolsCommand(dto.rolName, dto.description),
     );
   }
 

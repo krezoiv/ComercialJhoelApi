@@ -1,6 +1,6 @@
 import { ValueObject } from 'src/shared/domain/index-shared-domin';
 
-export class Name extends ValueObject<string> {
+export class RolName extends ValueObject<string> {
   constructor(value: string) {
     const normalized = value.trim();
     super(normalized);

@@ -7,7 +7,7 @@ export interface UsersWithRelations {
   phoneNumber: string;
   email: string;
   username: string;
-  name: string;
+  rolName: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;

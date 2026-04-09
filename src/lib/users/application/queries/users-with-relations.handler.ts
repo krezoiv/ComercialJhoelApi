@@ -23,7 +23,7 @@ export class USersWithRelationsHandler implements IQueryHandler<UsersWithRelatio
       phoneNumber: row.phoneNumber,
       email: row.email,
       userName: row.username, // ✅ AQUÍ LA CLAVE
-      name: row.name,
+      rolName: row.rolName,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       deletedAt: row.deletedAt,

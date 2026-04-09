@@ -12,7 +12,7 @@ export class CreateRolsSp {
   async execute(params: CreateRolsInput): Promise<CreateRolsRsults[]> {
     return this._spExecutor.execute<CreateRolsRsults>`
       EXEC sp_create_rols
-        @name = ${params.name},
+        @rol_name = ${params.rolName},
         @description = ${params.description}
       `;
   }

@@ -7,8 +7,10 @@ import {
   Patch,
   Delete,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Rols } from 'src/shared/auth/decorators/rol-decorator';
 import {
   CreatePersonsCommand,
   CreatePersonsDto,
@@ -21,6 +23,9 @@ import {
   UpdatePersonsCommand,
 } from '../../application/index-application';
 import { Persons } from '../../domain/index-domain';
+import { JwtAuthGuard } from 'src/lib/auth/login/infrastructure/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/shared/auth/guards/rols-guard';
+import { RolsList } from 'src/shared/auth/types/rols-enum';
 
 @Controller('persons')
 export class PersonsController {
@@ -42,6 +47,8 @@ export class PersonsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Rols(RolsList.ADMIN)
   async findAll(): Promise<Persons> {
     return this._queryBus.execute(new GetAllPersonsQuery());
   }

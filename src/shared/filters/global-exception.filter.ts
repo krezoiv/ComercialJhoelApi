@@ -3,6 +3,7 @@ import {
   Catch,
   ArgumentsHost,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { BadRequestException } from '@nestjs/common';
@@ -18,19 +19,29 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
+    // ✅ 🔥 IMPORTANTE (AGREGAR ESTO)
+    if (exception instanceof HttpException) {
+      const status = exception.getStatus();
+      const res = exception.getResponse();
+
+      return response
+        .status(status)
+        .json(typeof res === 'string' ? { message: res } : res);
+    }
+
     if (exception instanceof BadRequestException) {
-      const responseBody = exception.getResponse() as unknown as {
+      const responseBody = exception.getResponse() as {
         message: string | string[];
       };
 
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
-
         message: Array.isArray(responseBody.message)
           ? responseBody.message[0]
           : responseBody.message,
       });
     }
+
     if (exception instanceof ValidationError) {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,

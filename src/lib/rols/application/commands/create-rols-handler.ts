@@ -16,7 +16,7 @@ export class CreateRolsHandler implements ICommandHandler<CreateRolsCommand> {
 
   async execute(command: CreateRolsCommand) {
     const rol = RolsMapper.toEntity({
-      name: command.name,
+      rolName: command.rolName,
       description: command.description,
     });
 

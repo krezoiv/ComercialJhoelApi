@@ -2,8 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import {
   Description,
-  Name,
   RolId,
+  RolName,
   Rols,
   RolsRepository,
 } from '../../domain/index-rols-domain';
@@ -29,7 +29,7 @@ export class PrismaRolsRepository implements RolsRepository {
         (item) =>
           new Rols(
             new RolId(item.id),
-            new Name(item.name),
+            new RolName(item.rolName),
             new Description(item.description),
             new Date(item.createdAt),
             new Date(item.updatedAt),
@@ -58,7 +58,7 @@ export class PrismaRolsRepository implements RolsRepository {
   async create(rols: Rols): Promise<Rols> {
     try {
       const result = await this._createRolsSp.execute({
-        name: rols.name.value,
+        rolName: rols.rolName.value,
         description: rols.description.value,
       });
 
@@ -83,7 +83,7 @@ export class PrismaRolsRepository implements RolsRepository {
       }
       return new Rols(
         new RolId(created.id),
-        new Name(created.name),
+        new RolName(created.rolName),
         new Description(created.description),
         new Date(created.createdAt),
         new Date(created.updatedAt),
