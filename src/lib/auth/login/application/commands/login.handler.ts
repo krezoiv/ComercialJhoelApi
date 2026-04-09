@@ -32,6 +32,9 @@ export class LoginHandler implements IQueryHandler<LoginQuery> {
     }
 
     console.log('ROLE:');
+    console.log('USER ENTITY:', user);
+    console.log('ROL ENTITY:', user.rols);
+    console.log('ROL VALUE:', user.rols?.rolName?.value);
 
     const token = this._jwtService.sign({
       sub: user.id.value,

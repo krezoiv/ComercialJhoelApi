@@ -8,7 +8,12 @@ import {
   Users,
 } from 'src/lib/users/index-users-domain';
 import { PersonId } from 'src/lib/persons/domain/index-domain';
-import { RolId } from 'src/lib/rols/domain/index-rols-domain';
+import {
+  Description,
+  RolId,
+  RolName,
+  Rols,
+} from 'src/lib/rols/domain/index-rols-domain';
 
 @Injectable()
 export class PrismaAuthRepository implements AuthRepositoty {
@@ -21,6 +26,14 @@ export class PrismaAuthRepository implements AuthRepositoty {
     console.log('ROLE ID:', data.rolId);
     console.log('PERSON ID:', data.personId);
 
+    const rol = new Rols(
+      new RolId(data.id),
+      new RolName(data.rol),
+      new Description(data.description),
+      new Date(data.createdAt),
+      new Date(data.updatedAt),
+    );
+
     return new Users(
       new UserId(String(data.id)),
       new RolId(data.rolId),
@@ -30,6 +43,8 @@ export class PrismaAuthRepository implements AuthRepositoty {
       new Date(data.createdAt),
       new Date(data.updatedAt),
       data.deletedAt ? new Date(data.deletedAt) : null,
+      rol, // 👈 AQUÍ VA EL FIX
+      undefined,
     );
   }
 }

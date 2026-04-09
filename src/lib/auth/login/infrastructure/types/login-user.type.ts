@@ -4,6 +4,7 @@ export interface LoginUserRsult {
   passwordHash: string;
   rolId: string;
   rol: string;
+  description: string;
   personId: string;
   createdAt: string;
   updatedAt: string;

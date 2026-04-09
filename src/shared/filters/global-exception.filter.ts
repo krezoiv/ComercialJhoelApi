@@ -4,9 +4,11 @@ import {
   ArgumentsHost,
   HttpStatus,
   HttpException,
+  BadRequestException,
+  ForbiddenException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { BadRequestException } from '@nestjs/common';
 
 import { ValidationError } from '../errors/validation-error';
 import { NotFoundError } from '../errors/not-found-error';
@@ -19,15 +21,27 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    // ✅ 🔥 IMPORTANTE (AGREGAR ESTO)
-    if (exception instanceof HttpException) {
-      const status = exception.getStatus();
-      const res = exception.getResponse();
+    // ============================================
+    // 🔥 1. AUTH / SECURITY (PRIORIDAD ALTA)
+    // ============================================
 
-      return response
-        .status(status)
-        .json(typeof res === 'string' ? { message: res } : res);
+    if (exception instanceof UnauthorizedException) {
+      return response.status(HttpStatus.UNAUTHORIZED).json({
+        statusCode: 401,
+        message: 'No autenticado, token inválido o expirado',
+      });
     }
+
+    if (exception instanceof ForbiddenException) {
+      return response.status(HttpStatus.FORBIDDEN).json({
+        statusCode: 403,
+        message: 'No tienes permisos para acceder a este recurso',
+      });
+    }
+
+    // ============================================
+    // 🔥 2. VALIDACIONES HTTP
+    // ============================================
 
     if (exception instanceof BadRequestException) {
       const responseBody = exception.getResponse() as {
@@ -41,6 +55,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
           : responseBody.message,
       });
     }
+
+    // ============================================
+    // 🔥 3. ERRORES DE DOMINIO (DDD)
+    // ============================================
 
     if (exception instanceof ValidationError) {
       return response.status(HttpStatus.BAD_REQUEST).json({
@@ -70,7 +88,29 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       });
     }
 
-    console.error(exception);
+    // ============================================
+    // 🔥 4. ERRORES HTTP GENERALES (Nest)
+    // ============================================
+
+    if (exception instanceof HttpException) {
+      const status = exception.getStatus();
+      const res = exception.getResponse();
+
+      return response.status(status).json(
+        typeof res === 'string'
+          ? {
+              statusCode: status,
+              message: res,
+            }
+          : res,
+      );
+    }
+
+    // ============================================
+    // 🔥 5. ERROR DESCONOCIDO (FALLBACK)
+    // ============================================
+
+    console.error('UNHANDLED ERROR:', exception);
 
     return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       statusCode: 500,

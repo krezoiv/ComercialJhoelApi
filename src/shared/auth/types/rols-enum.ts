@@ -1,3 +1,3 @@
 export enum RolsList {
-  ADMIN = 'admin',
+  ADMIN = 'user',
 }
