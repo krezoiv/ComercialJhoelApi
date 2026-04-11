@@ -22,6 +22,7 @@ import {
   GetPersonByIdSp,
   UpdatePersonSp,
 } from './infrastructure/index-infrastructure';
+import { AuthModule } from '../auth/auth.module';
 
 const CommandHandlers = [
   CreatePersonsHandler,
@@ -32,7 +33,7 @@ const CommandHandlers = [
 const QueryHandlers = [GetAllPersonsHandler, GetPersonByIdHandler];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, AuthModule],
 
   controllers: [PersonsController],
 

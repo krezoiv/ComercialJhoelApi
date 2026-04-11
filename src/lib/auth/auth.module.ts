@@ -9,6 +9,8 @@ import { LoginUserSp } from './login/infrastructure/stored-procedure/login-user.
 import { LoginHandler } from './login/application/commands/login.handler';
 import { JwtStrategy } from './login/infrastructure/strategies/jwt.strategy';
 
+import { AbilityFactory } from 'src/shared/auth/index-shared -auth';
+
 const CommandHandler = [LoginHandler];
 @Module({
   imports: [
@@ -29,6 +31,10 @@ const CommandHandler = [LoginHandler];
       provide: 'AuthRepository',
       useClass: PrismaAuthRepository,
     },
+    AbilityFactory, // ✅ AGREGAR
+  ],
+  exports: [
+    AbilityFactory, // 🔥 CRÍTICO
   ],
 })
 export class AuthModule {}

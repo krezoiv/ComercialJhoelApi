@@ -56,7 +56,7 @@ model products {
 
 model rols {
   id          String    @id(map: "PK__rols__3213E83F75C532B6") @default(dbgenerated("newid()"), map: "DF__rols__id__4E88ABD4") @db.UniqueIdentifier
-  name        String    @db.NVarChar(50)
+  rol_name    String    @db.NVarChar(50)
   description String?   @db.NVarChar(255)
   created_at  DateTime  @default(now(), map: "DF__rols__created_at__4F7CD00D")
   updated_at  DateTime  @default(now(), map: "DF__rols__updated_at__5070F446")
@@ -75,4 +75,27 @@ model users {
   deleted_at    DateTime?
   persons       persons   @relation(fields: [person_id], references: [id], onUpdate: NoAction, map: "FK__users__person_id__5629CD9C")
   rols          rols      @relation(fields: [rol_id], references: [id], onUpdate: NoAction, map: "FK__users__rol_id__571DF1D5")
+}
+
+model account_types {
+  id                String    @id(map: "PK__account___3213E83F3AF927D8") @default(dbgenerated("newid()"), map: "DF__account_type__id__29221CFB") @db.UniqueIdentifier
+  account_type_name String    @unique(map: "idx_account_type_name") @db.NVarChar(75)
+  created_at        DateTime? @default(now(), map: "DF__account_t__creat__2A164134")
+  updated_at        DateTime?
+  deleted_at        DateTime?
+  banks             banks[]
+}
+
+model banks {
+  id              String        @id(map: "PK__banks__3213E83F0210ECE9") @default(dbgenerated("newid()"), map: "DF__banks__id__2CF2ADDF") @db.UniqueIdentifier
+  bank_name       String        @db.NVarChar(75)
+  description     String?       @db.NVarChar(255)
+  account_number  String        @db.NVarChar(100)
+  account_type_id String        @db.UniqueIdentifier
+  created_at      DateTime?     @default(now(), map: "DF__banks__created_a__2DE6D218")
+  updated_at      DateTime?
+  deleted_at      DateTime?
+  account_types   account_types @relation(fields: [account_type_id], references: [id], onUpdate: NoAction, map: "fk_banks_account_types")
+
+  @@index([account_number], map: "idx_bank_account_number")
 }
