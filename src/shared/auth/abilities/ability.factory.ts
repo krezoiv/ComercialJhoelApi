@@ -3,37 +3,29 @@ import {
   Actions,
   AppAbility,
   RequestUser,
-  RolsList,
   Subjects,
 } from '../index-shared -auth';
-
+import { permissions } from '../permissions/permissions';
 @Injectable()
 export class AbilityFactory {
   createForUser(user: RequestUser): AppAbility {
+    const rules = permissions[user.rol] || [];
+
     return {
       can: (action: Actions, subject: Subjects): boolean => {
-        // 🔥 SUPERADMIN puede TODO
-        if (user.rol === RolsList.SUPERADMIN) {
-          return true;
-        }
-
-        // 🔥 ADMIN puede todo en Persons
-        if (user.rol === RolsList.ADMIN) {
-          if (subject === Subjects.Persons) {
+        return rules.some((rule) => {
+          // 🔥 SUPERADMIN
+          if (rule.action === 'manage' && rule.subject === 'all') {
             return true;
           }
-        }
 
-        // 🔥 USER solo puede leer Persons
-        if (user.rol === RolsList.USER) {
-          if (action === Actions.Read && subject === Subjects.Persons) {
-            return true;
+          // 🔥 AQUÍ EL FIX
+          if (rule.action !== 'manage' && rule.subject !== 'all') {
+            return rule.action === action && rule.subject === subject;
           }
 
           return false;
-        }
-
-        return false;
+        });
       },
     };
   }

@@ -15,11 +15,12 @@ import {
   CreateRolsHandler,
   GetAllRolsHandler,
 } from './application/index-rols-application';
+import { AuthModule } from '../auth/auth.module';
 
 const CommandHandler = [CreateRolsHandler, GetAllRolsHandler];
 const QueryHandler = [GetAllRolsHandler];
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, AuthModule],
   controllers: [RolsController],
   providers: [
     PrismaService,

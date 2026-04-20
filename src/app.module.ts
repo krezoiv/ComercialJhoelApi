@@ -8,6 +8,9 @@ import { RolsModule } from './lib/rols/rols.module';
 import { CustomersModule } from './lib/customers/customers.module';
 import { UsersModule } from './lib/users/users.module';
 import { AuthModule } from './lib/auth/auth.module';
+import { BanksModude } from './lib/banks/banks.module';
+import { AccountTypeModule } from './lib/account-type/account-type.module';
+import { BanksAccountsModule } from './lib/banks-account/banks-accounts.module';
 
 @Module({
   imports: [
@@ -16,6 +19,9 @@ import { AuthModule } from './lib/auth/auth.module';
     CustomersModule,
     UsersModule,
     AuthModule,
+    BanksModude,
+    AccountTypeModule,
+    BanksAccountsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

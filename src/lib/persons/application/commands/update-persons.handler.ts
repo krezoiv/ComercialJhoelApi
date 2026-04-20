@@ -12,18 +12,6 @@ import {
 } from '../../domain/index-domain';
 import { NotFoundError } from 'src/shared/errors/index-errors';
 
-// import { UpdatePersonsCommand } from '../commands/update-persons.command';
-
-// import { PERSONS_REPOSITORY } from '../../domain/repository/persons.repository.token';
-// import { PersonsRepository } from '../../domain/repository/persons.repository';
-// import { NotFoundError } from 'src/shared/errors/not-found-error';
-
-// import { PersonId } from '../../domain/value-objects/personId';
-// import { FirstName } from '../../domain/value-objects/firstName';
-// import { LastName } from '../../domain/value-objects/lastName';
-// import { PhoneNumber } from '../../domain/value-objects/phoneNumber';
-// import { Email } from '../../domain/value-objects/email';
-
 @CommandHandler(UpdatePersonsCommand)
 export class UpdatePersonsHandler implements ICommandHandler<UpdatePersonsCommand> {
   constructor(

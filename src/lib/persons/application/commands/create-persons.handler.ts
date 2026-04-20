@@ -6,11 +6,6 @@ import {
   PersonsRepository,
 } from '../../domain/index-domain';
 
-// import { CreatePersonsCommand } from './create-persons.command';
-// import { PersonsMapper } from '../mappers/persons.mapper';
-// import { PersonsRepository } from '../../domain/repository/persons.repository';
-// import { PERSONS_REPOSITORY } from '../../domain/repository/persons.repository.token';
-
 @CommandHandler(CreatePersonsCommand)
 export class CreatePersonsHandler implements ICommandHandler<CreatePersonsCommand> {
   constructor(

@@ -78,24 +78,35 @@ model users {
 }
 
 model account_types {
-  id                String    @id(map: "PK__account___3213E83F3AF927D8") @default(dbgenerated("newid()"), map: "DF__account_type__id__29221CFB") @db.UniqueIdentifier
-  account_type_name String    @unique(map: "idx_account_type_name") @db.NVarChar(75)
-  created_at        DateTime? @default(now(), map: "DF__account_t__creat__2A164134")
+  id                String          @id(map: "PK__account___3213E83F3AF927D8") @default(dbgenerated("newid()"), map: "DF__account_type__id__29221CFB") @db.UniqueIdentifier
+  account_type_name String          @unique(map: "idx_account_type_name") @db.NVarChar(75)
+  created_at        DateTime?       @default(now(), map: "DF__account_t__creat__2A164134")
   updated_at        DateTime?
   deleted_at        DateTime?
-  banks             banks[]
+  bank_accounts     bank_accounts[]
 }
 
 model banks {
-  id              String        @id(map: "PK__banks__3213E83F0210ECE9") @default(dbgenerated("newid()"), map: "DF__banks__id__2CF2ADDF") @db.UniqueIdentifier
-  bank_name       String        @db.NVarChar(75)
-  description     String?       @db.NVarChar(255)
-  account_number  String        @db.NVarChar(100)
+  id            String          @id(map: "PK__banks__3213E83F0210ECE9") @default(dbgenerated("newid()"), map: "DF__banks__id__2CF2ADDF") @db.UniqueIdentifier
+  bank_name     String          @db.NVarChar(75)
+  description   String?         @db.NVarChar(255)
+  created_at    DateTime?       @default(now(), map: "DF__banks__created_a__2DE6D218")
+  updated_at    DateTime?
+  deleted_at    DateTime?
+  bank_accounts bank_accounts[]
+}
+
+model bank_accounts {
+  id              String        @id(map: "PK__bank_acc__3213E83F1A173CE6") @default(dbgenerated("newid()"), map: "DF__bank_account__id__31B762FC") @db.UniqueIdentifier
+  initial_balance Decimal       @db.Decimal(18, 2)
+  final_balance   Decimal       @db.Decimal(18, 2)
+  bank_id         String        @db.UniqueIdentifier
   account_type_id String        @db.UniqueIdentifier
-  created_at      DateTime?     @default(now(), map: "DF__banks__created_a__2DE6D218")
+  account_number  String        @unique(map: "idx_bank_accounts_account_number") @db.NVarChar(50)
+  created_at      DateTime?     @default(now(), map: "DF__bank_acco__creat__32AB8735")
   updated_at      DateTime?
   deleted_at      DateTime?
-  account_types   account_types @relation(fields: [account_type_id], references: [id], onUpdate: NoAction, map: "fk_banks_account_types")
-
-  @@index([account_number], map: "idx_bank_account_number")
+  account_name    String        @db.NVarChar(100)
+  account_types   account_types @relation(fields: [account_type_id], references: [id], onUpdate: NoAction, map: "fk_bank_accounts_account_types")
+  banks           banks         @relation(fields: [bank_id], references: [id], onUpdate: NoAction, map: "fk_bank_accounts_banks")
 }

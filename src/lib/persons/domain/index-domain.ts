@@ -1,5 +1,5 @@
 export * from './entity/persons.entity';
-export * from './repository/persons.repository';
+export * from './repository/persons.repository.type';
 export * from './repository/persons.repository.token';
 export * from './value-objects/email';
 export * from './value-objects/firstName';

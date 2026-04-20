@@ -14,8 +14,6 @@ import { AuthGuard } from '@nestjs/passport'; // 🔥 JWT
 import { Rols } from 'src/shared/auth/decorators/rol-decorator';
 import { CheckPolicies } from 'src/shared/auth/decorators/policies.decorator';
 
-import { PoliciesGuard } from 'src/shared/auth/guards/policies.guard';
-
 import {
   CreatePersonsCommand,
   CreatePersonsDto,
@@ -32,12 +30,11 @@ import { Persons } from '../../domain/index-domain';
 import { RolsList } from 'src/shared/auth/types/rols.enum';
 import {
   Actions,
+  PoliciesGuard,
   RolesGuard,
   Subjects,
 } from 'src/shared/auth/index-shared -auth';
-// 🔥 OJO: sin espacio
 
-// 🔥 AQUÍ ESTÁ LA CLAVE
 @UseGuards(AuthGuard('jwt'), RolesGuard, PoliciesGuard)
 @Controller('persons')
 export class PersonsController {

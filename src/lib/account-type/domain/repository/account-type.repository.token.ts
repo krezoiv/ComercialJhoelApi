@@ -1,0 +1,1 @@
+export const ACCOUNT_TYPE_REPOSITORY = 'ACCOUNT_TYPE';

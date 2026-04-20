@@ -39,7 +39,6 @@ export class PrismaPersonsRepository implements PersonsRepository {
         lastName: person.lastName.value,
         phoneNumber: person.phoneNumber.value,
         email: person.email.value,
-        //id: '',
       });
 
       const created = result[0];
