@@ -1,5 +1,7 @@
 export interface AuthUser {
-  sub: string;
+  id: string;
   userName: string;
   rol: string;
+  firstName?: string;
+  lastName?: string;
 }

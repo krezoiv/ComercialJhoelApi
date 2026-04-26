@@ -7,4 +7,5 @@ export interface CustomersRepository extends BaseRepository<
   CustomerId
 > {
   findAllRaw(): Promise<CustomerWithPerson[]>;
+  searchCustomers(search: string): Promise<CustomerWithPerson[]>;
 }

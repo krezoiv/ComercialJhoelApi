@@ -15,14 +15,23 @@ import {
   ValidationError,
 } from 'src/shared/errors/index-errors';
 import { PersonId } from 'src/lib/persons/domain/index-domain';
+import { SearchCustomersSp } from '../stored-procedures/search-customers.sp';
 
 @Injectable()
 export class PrismaCustomersRepository implements CustomersRepository {
   constructor(
     private readonly _getAllCustomersSp: GetAllCustomersSp,
     private readonly _createCustomersSp: CreateCustomersSp,
+    private readonly _searchCustomersSp: SearchCustomersSp,
   ) {}
 
+  async searchCustomers(search: string): Promise<CustomerWithPerson[]> {
+    const result = await this._searchCustomersSp.execute({
+      search,
+    });
+
+    return result;
+  }
   async create(customer: Customers): Promise<Customers> {
     try {
       const result = await this._createCustomersSp.execute({
@@ -65,7 +74,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
       }
 
       // 👇 error inesperado
-      throw new DomainError('Unexpected error creating person');
+      throw new DomainError('Unexpected error creating customer');
     }
   }
   async findAll(): Promise<Customers[]> {

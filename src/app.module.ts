@@ -11,6 +11,8 @@ import { AuthModule } from './lib/auth/auth.module';
 import { BanksModude } from './lib/banks/banks.module';
 import { AccountTypeModule } from './lib/account-type/account-type.module';
 import { BanksAccountsModule } from './lib/banks-account/banks-accounts.module';
+import { ExpenseModule } from './lib/expenses/expense.module';
+import { BankAgentsModule } from './lib/banks-agents/bank-agents.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { BanksAccountsModule } from './lib/banks-account/banks-accounts.module';
     BanksModude,
     AccountTypeModule,
     BanksAccountsModule,
+    ExpenseModule,
+    BankAgentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

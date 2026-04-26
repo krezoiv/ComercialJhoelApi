@@ -37,8 +37,8 @@ export class PrismaPersonsRepository implements PersonsRepository {
       const result = await this._createPersonSp.execute({
         firstName: person.firstName.value,
         lastName: person.lastName.value,
-        phoneNumber: person.phoneNumber.value,
-        email: person.email.value,
+        phoneNumber: person.phoneNumber?.value ?? null,
+        email: person.email?.value ?? null,
       });
 
       const created = result[0];

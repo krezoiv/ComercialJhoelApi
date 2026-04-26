@@ -8,7 +8,7 @@ datasource db {
 }
 
 model persons {
-  id           String      @id(map: "PK__persons__3213E83F2E6743A9") @default(dbgenerated("newid()"), map: "DF__persons__id__49C3F6B7") @db.UniqueIdentifier
+  id           String      @id(map: "PK__persons__3213E83F2E6743A9") @unique(map: "UX_persons_id") @default(dbgenerated("newid()"), map: "DF__persons__id__49C3F6B7") @db.UniqueIdentifier
   first_name   String      @db.NVarChar(50)
   last_name    String      @db.NVarChar(50)
   phone_number String      @db.NVarChar(8)
@@ -16,7 +16,7 @@ model persons {
   created_at   DateTime    @default(now(), map: "DF__persons__created__4AB81AF0")
   updated_at   DateTime    @default(now(), map: "DF__persons__updated__4BAC3F29")
   deleted_at   DateTime?
-  costumers    costumers[]
+  customers    customers[]
   users        users[]
 
   @@map("persons")
@@ -30,15 +30,6 @@ model categories {
   updated_at  DateTime   @default(now(), map: "DF__categorie__updat__619B8048")
   deleted_at  DateTime?
   products    products[]
-}
-
-model costumers {
-  id         String    @id(map: "PK__costumer__3213E83FA35C6BF6") @default(dbgenerated("newid()"), map: "DF__costumers__id__59FA5E80") @db.UniqueIdentifier
-  person_id  String    @db.UniqueIdentifier
-  created_at DateTime  @default(now(), map: "DF__costumers__creat__5AEE82B9")
-  updated_at DateTime  @default(now(), map: "DF__costumers__updat__5BE2A6F2")
-  deleted_at DateTime?
-  persons    persons   @relation(fields: [person_id], references: [id], onUpdate: NoAction, map: "FK__costumers__perso__5CD6CB2B")
 }
 
 model products {
@@ -65,16 +56,18 @@ model rols {
 }
 
 model users {
-  id            String    @id(map: "PK__users__3213E83F461B4926") @default(dbgenerated("newid()"), map: "DF__users__id__534D60F1") @db.UniqueIdentifier
-  person_id     String    @db.UniqueIdentifier
-  username      String    @db.NVarChar(50)
-  rol_id        String    @db.UniqueIdentifier
-  password_hash String    @db.NVarChar(255)
-  created_at    DateTime  @default(now(), map: "DF__users__created_a__5441852A")
-  updated_at    DateTime  @default(now(), map: "DF__users__updated_a__5535A963")
+  id            String        @id(map: "PK__users__3213E83F461B4926") @default(dbgenerated("newid()"), map: "DF__users__id__534D60F1") @db.UniqueIdentifier
+  person_id     String        @db.UniqueIdentifier
+  username      String        @db.NVarChar(50)
+  rol_id        String        @db.UniqueIdentifier
+  password_hash String        @db.NVarChar(255)
+  created_at    DateTime      @default(now(), map: "DF__users__created_a__5441852A")
+  updated_at    DateTime      @default(now(), map: "DF__users__updated_a__5535A963")
   deleted_at    DateTime?
-  persons       persons   @relation(fields: [person_id], references: [id], onUpdate: NoAction, map: "FK__users__person_id__5629CD9C")
-  rols          rols      @relation(fields: [rol_id], references: [id], onUpdate: NoAction, map: "FK__users__rol_id__571DF1D5")
+  bank_agents   bank_agents[]
+  expenses      expenses[]
+  persons       persons       @relation(fields: [person_id], references: [id], onUpdate: NoAction, map: "FK__users__person_id__5629CD9C")
+  rols          rols          @relation(fields: [rol_id], references: [id], onUpdate: NoAction, map: "FK__users__rol_id__571DF1D5")
 }
 
 model account_types {
@@ -94,6 +87,7 @@ model banks {
   updated_at    DateTime?
   deleted_at    DateTime?
   bank_accounts bank_accounts[]
+  bank_agents   bank_agents[]
 }
 
 model bank_accounts {
@@ -109,4 +103,45 @@ model bank_accounts {
   account_name    String        @db.NVarChar(100)
   account_types   account_types @relation(fields: [account_type_id], references: [id], onUpdate: NoAction, map: "fk_bank_accounts_account_types")
   banks           banks         @relation(fields: [bank_id], references: [id], onUpdate: NoAction, map: "fk_bank_accounts_banks")
+}
+
+model customers {
+  id          String        @id(map: "PK__costumer__3213E83FA35C6BF6") @default(dbgenerated("newid()"), map: "DF__costumers__id__59FA5E80") @db.UniqueIdentifier
+  person_id   String        @db.UniqueIdentifier
+  created_at  DateTime      @default(now(), map: "DF__costumers__creat__5AEE82B9")
+  updated_at  DateTime      @default(now(), map: "DF__costumers__updat__5BE2A6F2")
+  deleted_at  DateTime?
+  bank_agents bank_agents[]
+  persons     persons       @relation(fields: [person_id], references: [id], onUpdate: NoAction, map: "FK__costumers__perso__5CD6CB2B")
+  expenses    expenses[]
+}
+
+model expenses {
+  id           String    @id(map: "PK__expenses__3213E83F8069AABF") @default(dbgenerated("newid()"), map: "DF__expenses__id__46B27FE2") @db.UniqueIdentifier
+  description  String    @db.NVarChar(255)
+  customer_id  String    @db.UniqueIdentifier
+  user_id      String    @db.UniqueIdentifier
+  amount       Decimal   @db.Decimal(18, 2)
+  created_at   DateTime  @default(dbgenerated("sysdatetime()"), map: "DF__expenses__create__47A6A41B")
+  updated_at   DateTime  @default(dbgenerated("sysdatetime()"), map: "DF__expenses__update__489AC854")
+  deleted_at   DateTime?
+  expense_type String?   @db.NVarChar(50)
+  customers    customers @relation(fields: [customer_id], references: [id], onUpdate: NoAction, map: "FK_expenses_customers")
+  users        users     @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "FK_expenses_users")
+}
+
+model bank_agents {
+  id           String    @id(map: "PK__bank_age__3213E83F21B7006E") @default(dbgenerated("newid()"), map: "DF__bank_agents__id__625A9A57") @db.UniqueIdentifier
+  customer_id  String    @db.UniqueIdentifier
+  bank_id      String    @db.UniqueIdentifier
+  description  String    @db.NVarChar(255)
+  amount       Decimal   @db.Decimal(18, 2)
+  payment_date DateTime  @db.Date
+  user_id      String    @db.UniqueIdentifier
+  created_at   DateTime  @default(dbgenerated("sysdatetime()"), map: "DF__bank_agen__creat__634EBE90")
+  updated_at   DateTime  @default(dbgenerated("sysdatetime()"), map: "DF__bank_agen__updat__6442E2C9")
+  deleted_at   DateTime?
+  banks        banks     @relation(fields: [bank_id], references: [id], onUpdate: NoAction, map: "FK_bank_agents_bank")
+  customers    customers @relation(fields: [customer_id], references: [id], onUpdate: NoAction, map: "FK_bank_agents_customer")
+  users        users     @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "FK_bank_agents_user")
 }

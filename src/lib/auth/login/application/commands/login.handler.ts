@@ -17,7 +17,8 @@ export class LoginHandler implements IQueryHandler<LoginQuery> {
 
   async execute(query: LoginQuery) {
     const user = await this._authRepository.findByUserName(query.userName);
-    console.log('ROLE:');
+    console.log('USER:', user);
+    console.log('PERSON:', user.persons?.firstName);
 
     if (!user) {
       throw new Error('Usuario no existe');
@@ -35,6 +36,8 @@ export class LoginHandler implements IQueryHandler<LoginQuery> {
     const token = this._jwtService.sign({
       sub: user.id.value,
       userName: user.userName.value,
+      firstName: user.persons?.firstName.value,
+      lastName: user.persons?.lastName.value,
       rol: user.rols?.rolName.value as RolsList,
     });
 

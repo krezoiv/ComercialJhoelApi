@@ -1,3 +1,7 @@
-import { AuthUser } from './auth-user.type';
-
-export type JwtPayload = AuthUser;
+export interface JwtPayload {
+  sub: string;
+  userName: string;
+  rol: string;
+  firstName?: string;
+  lastName?: string;
+}
