@@ -1,41 +1,35 @@
 import { ValueObject } from 'src/shared/domain/index-shared-domin';
 
-export class PaymentDate extends ValueObject<Date> {
-  constructor(value: Date) {
+export class PaymentDate extends ValueObject<string> {
+  constructor(value: string) {
     super(value);
     this.ensureIsValid();
   }
 
   private ensureIsValid() {
     if (!this.value) {
-      throw new Error('Fecha de pago es requerida');
+      throw new Error('Fecha inválida');
     }
 
-    if (!(this.value instanceof Date)) {
-      throw new Error('Fecha de pago debe ser una fecha válida');
-    }
+    const inputDate = new Date(this.value + 'T00:00:00Z');
 
-    if (isNaN(this.value.getTime())) {
-      throw new Error('Fecha de pago inválida');
-    }
+    const now = new Date();
+    const today = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const minDate = new Date(today);
+    minDate.setDate(minDate.getDate() - 1);
 
-    const inputDate = new Date(this.value);
-    inputDate.setHours(0, 0, 0, 0);
-
-    // ❌ No permitir fechas pasadas
-    if (inputDate < today) {
+    if (inputDate < minDate) {
       throw new Error('No se permiten fechas pasadas');
     }
 
-    // ❌ No permitir más de 5 días hacia el futuro
     const maxDate = new Date(today);
     maxDate.setDate(maxDate.getDate() + 5);
 
     if (inputDate > maxDate) {
-      throw new Error('La fecha no puede ser mayor a 5 días desde hoy');
+      throw new Error('Máximo 5 días desde hoy');
     }
   }
 }

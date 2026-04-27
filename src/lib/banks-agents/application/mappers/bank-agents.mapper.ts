@@ -1,15 +1,17 @@
 import { randomUUID } from 'crypto';
 import {
   BankAgent,
-  BankAgentAmount,
-  BankAgentDescription,
   BankAgentId,
+  BankAgentDescription,
+  BankAgentAmount,
   PaymentDate,
 } from '../../domain/index-bank.agents-domain';
-import { CreateBankAgentsInput } from '../../infrastructure/index-agent-banks-infrastructure';
+
 import { CustomerId } from 'src/lib/customers/domain/index-domain';
 import { BankId } from 'src/lib/banks/domain/index-banks-domain';
 import { UserId } from 'src/lib/users/index-users-domain';
+
+import { CreateBankAgentsInput } from '../../infrastructure/index-agent-banks-infrastructure';
 
 export class BankAgentsMapper {
   static toEntity(input: CreateBankAgentsInput): BankAgent {
@@ -19,7 +21,8 @@ export class BankAgentsMapper {
     const userId = new UserId(input.userId);
     const description = new BankAgentDescription(input.agentDescription);
     const amount = new BankAgentAmount(input.bankAgentAmount);
-    const paymentDate = new PaymentDate(new Date(input.paymentDate));
+    const paymentDate = new PaymentDate(input.paymentDate);
+
     const now = new Date();
 
     return new BankAgent(

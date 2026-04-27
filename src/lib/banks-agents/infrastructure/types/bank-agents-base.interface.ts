@@ -6,5 +6,5 @@ export interface BankAgentsBase extends BaseId {
   bankId: string;
   agentDescription: string;
   bankAgentAmount: number;
-  paymentDate: Date;
+  paymentDate: string;
 }

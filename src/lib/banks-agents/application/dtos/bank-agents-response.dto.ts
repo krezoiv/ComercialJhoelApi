@@ -5,5 +5,5 @@ export class BankAgentsResponseDto {
   userId!: string;
   description!: string;
   amount!: number;
-  paymentDate!: Date;
+  paymentDate!: string;
 }

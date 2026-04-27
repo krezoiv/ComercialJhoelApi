@@ -22,7 +22,7 @@ export class CreateBankAgentsDto {
   @IsNotEmpty({ message: 'Campo requerido' })
   amount!: number;
 
-  @Type(() => Date)
+  @IsString()
   @IsNotEmpty({ message: 'Campo requerido' })
-  paymentDate!: Date;
+  paymentDate!: string;
 }

@@ -5,6 +5,6 @@ export class CreateBankAgentsCommand {
     public readonly userId: string,
     public readonly description: string,
     public readonly amount: number,
-    public readonly paymentDate: Date,
+    public readonly paymentDate: string,
   ) {}
 }
