@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -7,6 +7,7 @@ import {
 } from '../../application/index-banks-agents-application';
 import { RequestWithUser } from 'src/shared/auth/types/request-with-user.interface';
 import { BankAgent } from '../../domain/index-bank.agents-domain';
+import { GetBankAgentsByCustomersQuery } from '../../application/queries/get-bank-agent-by-customers.query';
 
 @Controller('bankAgents')
 export class BankAgentsController {
@@ -31,5 +32,10 @@ export class BankAgentsController {
         dto.paymentDate,
       ),
     );
+  }
+
+  @Get('bankAgents-customers')
+  async getAgentBanksByCustomers(): Promise<BankAgent> {
+    return this._queryBus.execute(new GetBankAgentsByCustomersQuery());
   }
 }

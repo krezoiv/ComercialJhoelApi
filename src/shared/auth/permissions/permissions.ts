@@ -13,6 +13,8 @@ export const permissions: Record<RolsList, PermissionRule[]> = {
     { action: Actions.Create, subject: Subjects.AccountType },
     { action: Actions.Read, subject: Subjects.BanksAccounts },
     { action: Actions.Create, subject: Subjects.BanksAccounts },
+    { action: Actions.Create, subject: Subjects.Persons },
+    { action: Actions.Read, subject: Subjects.Persons },
   ],
 
   [RolsList.USER]: [{ action: Actions.Read, subject: Subjects.Persons }],

@@ -15,19 +15,28 @@ import { CustomerId } from 'src/lib/customers/domain/index-domain';
 import { BankId } from 'src/lib/banks/domain/index-banks-domain';
 
 import { UserId } from 'src/lib/users/index-users-domain';
+import { IGetBankAgentsByCustomers } from '../types/gets/get-bank-agents-by-customers.interface';
+import { GetBankAgentsByCustomersSp } from '../stored-procedures/get-bank-agents-by-customers.sp';
 
 @Injectable()
 export class PrismaBankAgentsRepository implements BankAgentsRepository {
-  constructor(private readonly _createBankAgentsSp: CreateBankAgentsSp) {}
+  constructor(
+    private readonly _createBankAgentsSp: CreateBankAgentsSp,
+    private readonly _getBankAgentsByCustomers: GetBankAgentsByCustomersSp,
+  ) {}
+
   findAll(): Promise<BankAgent[]> {
     throw new Error('Method not implemented.');
   }
+
   findById(id: BankAgentId): Promise<BankAgent | null> {
     throw new Error('Method not implemented.');
   }
+
   update(entity: BankAgent): Promise<BankAgent> {
     throw new Error('Method not implemented.');
   }
+
   delete(id: BankAgentId): Promise<void> {
     throw new Error('Method not implemented.');
   }
@@ -85,5 +94,9 @@ export class PrismaBankAgentsRepository implements BankAgentsRepository {
       // 👇 error inesperado
       throw new DomainError('Unexpected error creating agent');
     }
+  }
+
+  async getAgentBanksByCustomers(): Promise<IGetBankAgentsByCustomers[]> {
+    return this._getBankAgentsByCustomers.execute();
   }
 }

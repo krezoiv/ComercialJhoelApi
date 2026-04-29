@@ -8,6 +8,8 @@ import {
   CreateCustomersSp,
   CustomerWithPerson,
   GetAllCustomersSp,
+  GetCustomerStatsSp,
+  SearchCustomersSp,
 } from '../index-infrastructure';
 import {
   ConflictError,
@@ -15,7 +17,7 @@ import {
   ValidationError,
 } from 'src/shared/errors/index-errors';
 import { PersonId } from 'src/lib/persons/domain/index-domain';
-import { SearchCustomersSp } from '../stored-procedures/search-customers.sp';
+import { IGetCustomerStats } from '../types/get-customer.stats-interface';
 
 @Injectable()
 export class PrismaCustomersRepository implements CustomersRepository {
@@ -23,6 +25,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
     private readonly _getAllCustomersSp: GetAllCustomersSp,
     private readonly _createCustomersSp: CreateCustomersSp,
     private readonly _searchCustomersSp: SearchCustomersSp,
+    private readonly _getCustomerStatsSp: GetCustomerStatsSp,
   ) {}
 
   async searchCustomers(search: string): Promise<CustomerWithPerson[]> {
@@ -95,6 +98,10 @@ export class PrismaCustomersRepository implements CustomersRepository {
       console.error(error);
       throw new Error('Error fetching persons from SP');
     }
+  }
+
+  async getCustomerStats(): Promise<IGetCustomerStats[]> {
+    return this._getCustomerStatsSp.execute();
   }
 
   async findAllRaw(): Promise<CustomerWithPerson[]> {

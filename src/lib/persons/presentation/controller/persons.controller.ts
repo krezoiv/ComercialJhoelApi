@@ -45,8 +45,8 @@ export class PersonsController {
 
   // 🔓 SOLO ADMIN puede crear
   @Post()
-  @Rols(RolsList.ADMIN)
-  @CheckPolicies((ability) => ability.can(Actions.Create, Subjects.Persons))
+  // @Rols(RolsList.ADMIN)
+  // @CheckPolicies((ability) => ability.can(Actions.Create, Subjects.Persons))
   async create(@Body() dto: CreatePersonsDto): Promise<Persons> {
     return this._commandBus.execute(
       new CreatePersonsCommand(

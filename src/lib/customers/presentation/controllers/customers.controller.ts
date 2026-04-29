@@ -8,6 +8,7 @@ import {
 import { Customers } from '../../domain/index-domain';
 import { SearchCustomersQuery } from '../../application/queries/search-customers.query';
 import { CustomerWithPerson } from '../../infrastructure/index-infrastructure';
+import { GetCustomerStatsQuery } from '../../application/queries/get-customers-stats.query';
 
 @Controller('customers')
 export class CustomerController {
@@ -33,5 +34,10 @@ export class CustomerController {
     return this._queryBus.execute<SearchCustomersQuery, CustomerWithPerson[]>(
       new SearchCustomersQuery(search),
     );
+  }
+
+  @Get('customer-stats')
+  async getCustomerStats(): Promise<Customers> {
+    return this._queryBus.execute(new GetCustomerStatsQuery());
   }
 }

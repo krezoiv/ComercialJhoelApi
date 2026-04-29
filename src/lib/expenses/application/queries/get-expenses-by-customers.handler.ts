@@ -23,7 +23,7 @@ export class GetExpensesByCustomersHandler implements IQueryHandler<GetExpensesB
       phone: item.phone,
       email: item.email,
       totalExpenses: item.totalExpenses,
-      totalAmount: item.totalAmount,
+      totalAmount: Number(item.totalAmount),
       firstExpenseDate: item.firstExpenseDate,
       lastExpenseDate: item.lastExpenseDate,
     }));

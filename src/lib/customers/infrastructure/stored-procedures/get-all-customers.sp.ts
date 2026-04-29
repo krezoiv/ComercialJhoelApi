@@ -8,7 +8,7 @@ export class GetAllCustomersSp {
 
   async execute(): Promise<GetAllCustomerResults[]> {
     return this.spExecutor.execute<GetAllCustomerResults>`
-        EXEC sp_get_all_customers
+        
         `;
   }
 }
