@@ -7,10 +7,10 @@ import {
 
 @Injectable()
 export class GetPersonByIdSp {
-  constructor(private readonly spExecutor: SpExecutorService) {}
+  constructor(private readonly _spExecutor: SpExecutorService) {}
 
   async execute(params: GetPersonByIdInput): Promise<GetPersonByIdResult[]> {
-    return this.spExecutor.execute<GetPersonByIdResult>`
+    return this._spExecutor.execute<GetPersonByIdResult>`
     EXEC sp_get_person_by_id
       @id = ${params.id}
     `;

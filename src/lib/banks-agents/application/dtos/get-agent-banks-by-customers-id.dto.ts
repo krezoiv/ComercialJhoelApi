@@ -1,6 +1,6 @@
 import { IsUUID } from 'class-validator';
 
-export class GetPersonByIdDto {
+export class GetBankAgentsByCustomerIdDto {
   @IsUUID()
   id!: string;
 }

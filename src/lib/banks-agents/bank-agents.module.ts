@@ -8,13 +8,23 @@ import { CreateBankAgentsHandler } from './application/index-banks-agents-applic
 import { PrismaBankAgentsRepository } from './infrastructure/prisma/prisma-bank-agents-repository';
 import { GetBankAgentsByCustomersSp } from './infrastructure/stored-procedures/get-bank-agents-by-customers.sp';
 import { GetBankAgentsByCustomersHandler } from './application/queries/get-bank-agent-by-customers.handler';
+import { GetBankAgentsByCustomersIdHandler } from './application/queries/get-bank-agent-by-customer-id.handler';
+import { GetBankAgentsByCustomersIdSp } from './infrastructure/stored-procedures/get-banks-agents-by-customers-id.sp';
+import { ProcessBankAgentsHandler } from './application/commands/process-bank-agents.handler';
+import { ProcessBankAgentsSp } from './infrastructure/stored-procedures/process-bank-agents.sp';
 
 const CommandHandlers = [
   CreateBankAgentsHandler,
   GetBankAgentsByCustomersHandler,
+  GetBankAgentsByCustomersIdHandler,
+  ProcessBankAgentsHandler,
 ];
 
-const QueryHandlers = [GetBankAgentsByCustomersHandler];
+const QueryHandlers = [
+  GetBankAgentsByCustomersHandler,
+  GetBankAgentsByCustomersIdHandler,
+  ProcessBankAgentsHandler,
+];
 
 @Module({
   imports: [CqrsModule],
@@ -24,6 +34,8 @@ const QueryHandlers = [GetBankAgentsByCustomersHandler];
     SpExecutorService,
     CreateBankAgentsSp,
     GetBankAgentsByCustomersSp,
+    GetBankAgentsByCustomersIdSp,
+    ProcessBankAgentsSp,
     ...CommandHandlers,
     ...QueryHandlers,
     {

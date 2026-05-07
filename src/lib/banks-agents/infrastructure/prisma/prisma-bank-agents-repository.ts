@@ -17,12 +17,20 @@ import { BankId } from 'src/lib/banks/domain/index-banks-domain';
 import { UserId } from 'src/lib/users/index-users-domain';
 import { IGetBankAgentsByCustomers } from '../types/gets/get-bank-agents-by-customers.interface';
 import { GetBankAgentsByCustomersSp } from '../stored-procedures/get-bank-agents-by-customers.sp';
+import { GetBankAgentsByCustomersIdSp } from '../stored-procedures/get-banks-agents-by-customers-id.sp';
+import {
+  GetBankAgentsByCustomerIdResult,
+  ProcessBankAgentsResult,
+} from '../index-agent-banks-infrastructure';
+import { ProcessBankAgentsSp } from '../stored-procedures/process-bank-agents.sp';
 
 @Injectable()
 export class PrismaBankAgentsRepository implements BankAgentsRepository {
   constructor(
     private readonly _createBankAgentsSp: CreateBankAgentsSp,
     private readonly _getBankAgentsByCustomers: GetBankAgentsByCustomersSp,
+    private readonly _getBankagentsByCustomersId: GetBankAgentsByCustomersIdSp,
+    private readonly _processBankAgentsSp: ProcessBankAgentsSp,
   ) {}
 
   findAll(): Promise<BankAgent[]> {
@@ -98,5 +106,60 @@ export class PrismaBankAgentsRepository implements BankAgentsRepository {
 
   async getAgentBanksByCustomers(): Promise<IGetBankAgentsByCustomers[]> {
     return this._getBankAgentsByCustomers.execute();
+  }
+
+  async getAgentBanksByCustomersId(
+    id: CustomerId,
+  ): Promise<GetBankAgentsByCustomerIdResult[]> {
+    try {
+      const result = await this._getBankagentsByCustomersId.execute({
+        id: id.value,
+      });
+
+      if (!result || result.length === 0) {
+        return [];
+      }
+
+      return result; // ✅ SOLO ESTO
+    } catch (error) {
+      console.error(error);
+
+      if (error instanceof DomainError) {
+        throw error;
+      }
+
+      throw new DomainError('Error fetching bank agents');
+    }
+  }
+
+  async processBankAgents(
+    data: {
+      id: string;
+      amount: number;
+      createdAt: string;
+      checked: boolean;
+    }[],
+  ): Promise<ProcessBankAgentsResult> {
+    try {
+      const result = await this._processBankAgentsSp.execute(data);
+
+      const response = result[0];
+
+      if (!response || response.code !== 200) {
+        throw new DomainError(
+          response?.message || 'Error processing bank agents',
+        );
+      }
+
+      return response; // 👈 YA NO VOID
+    } catch (error) {
+      console.error(error);
+
+      if (error instanceof DomainError) {
+        throw error;
+      }
+
+      throw new DomainError('Unexpected error processing bank agents');
+    }
   }
 }
